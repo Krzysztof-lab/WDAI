@@ -1,0 +1,62 @@
+<html lang="pl">
+    <head>
+        <title>Terms of Service</title>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Playwrite+GB+S:ital,wght@0,100..400;1,100..400&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="Style.css">
+    </head>
+    <body>
+        <nav>
+            <div class="navbar">
+                <a href="Home.html" class="logo">SkyPhotos</a>
+                <ul>
+                    <li><a href="Home.html">Home</a></li>
+                    <li><a href="gallery.html">Gallery</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                    <span id="clock"></span>
+                </ul>
+            </div>
+        </nav>
+
+        <div class="content">
+            <div class="overlay">
+                <h1>Terms of Service</h1>
+                <p>Welcome to SkyPhotos! These Terms of Service outline the rules and conditions that you must accept to use our website and services. We aim to make your experience enjoyable and transparent by providing clear guidelines.</p>
+                
+                <h2>Acceptance of Terms</h2>
+                <p>By using our website, you agree to comply with these terms. If you do not agree to these terms, please do not use our services. By accepting, you acknowledge that you are responsible for any actions taken on your account.</p>
+                
+                <h2>Website Usage</h2>
+                <p>It is prohibited to use the website in any way that violates legal regulations or could harm other users. We reserve the right to block access in case of violations. We also expect all users to respect the community and contribute positively.</p>
+                
+                <h2>Liability</h2>
+                <p>SkyPhotos is not liable for any damages resulting from the use of our website or services. You use our website at your own risk. We encourage responsible use and remind users to be cautious with any shared content.</p>
+                
+                <h2>Changes to Terms</h2>
+                <p>We reserve the right to modify these terms at any time. Any changes will take effect immediately upon being posted on the website. It is your responsibility to review these terms regularly to stay informed about updates.</p>
+            </div>
+        </div>        
+        
+        <footer>
+            <div class="social-icons">
+                <a href="https://www.facebook.com" target="_blank">Facebook</a>
+                <a href="https://www.instagram.com" target="_blank">Instagram</a>
+                <a href="https://github.com/Krzysztof-lab/WDAI" target="_blank">Github</a>
+            </div>
+            <p>&copy; 2024 SkyPhotos. All rights reserved.</p>
+            <p><a href="privacy.html">Privacy Policy</a> | <a href="terms.html">Terms of Service</a></p>
+        </footer>
+        <script>
+            function updateClock() {
+               const now = new Date();
+               const hours = String(now.getHours()).padStart(2, '0');
+               const minutes = String(now.getMinutes()).padStart(2, '0');
+               const seconds = String(now.getSeconds()).padStart(2, '0');
+               document.getElementById('clock').textContent = `${hours}:${minutes}:${seconds}`;
+            }
+            setInterval(updateClock, 1000);
+            updateClock();
+         </script>
+    </body>
+</html>
