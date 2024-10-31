@@ -4,66 +4,59 @@
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Playwrite+GB+S:ital,wght@0,100..400;1,100..400&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
-        <style>
-            body {margin: 0; font-family: 'Roboto';background-image: url('background.jpeg'); background-size: cover; background-position: center; background-repeat: no-repeat;}
-            nav {background-color: #0F1035; padding: 1em;}
-            .navbar {display: flex; justify-content: space-between; align-items: center;}
-            .navbar ul {list-style-type: none; display: flex; margin: 0; padding: 0;}
-            .navbar ul li {margin-right: 20px;}
-            .navbar ul li:last-child {margin-right: 0;}
-            .navbar ul li a {text-decoration: none; color: #DCF2F1; font-size: 16px; padding: 10px 15px; transition: background-color 0.3s ease;}
-            .navbar ul li a:hover {background-color: #3A6D8C; border-radius: 5px;}
-            .logo {font-size: 20px; color: white; font-weight: bold;}
-            .content {padding: 20px; max-width: 800px; margin: auto; flex: 1;}
-            .overlay {background-color: rgba(0, 0, 0, 0.5); padding: 20px; border-radius: 8px; color: white; z-index: 2; position: relative;}
-            footer {background-color: #0F1035; color: #DCF2F1; text-align: center; padding: 20px; margin-top: 50px;}
-            footer .social-icons {margin: 10px 0;}
-            footer .social-icons a {text-decoration: none; color: #DCF2F1; font-size: 20px; margin: 0 10px; transition: color 0.3s ease;}
-            footer .social-icons a:hover {color: white;}
-            footer p {font-size: 14px;}
-            footer a {color: #DCF2F1; text-decoration: none;}
-            footer a:hover {text-decoration: underline;}
-            @media screen and (max-width: 600px) {.navbar ul {flex-direction: column;} .navbar ul li {margin-right: 0; margin-bottom: 10px;}}
-        </style>
+        <link rel="stylesheet" href="Style.css">
     </head>
     <body>
         <nav>
             <div class="navbar">
-                <div class="logo">SkyPhotos</div>
+                <a href="Home.html" class="logo">SkyPhotos</a>
                 <ul>
                     <li><a href="Home.html">Home</a></li>
                     <li><a href="gallery.html">Gallery</a></li>
                     <li><a href="contact.html">Contact</a></li>
+                    <span id="clock"></span>
                 </ul>
             </div>
         </nav>
 
         <div class="content">
-            <div class="overlay"></div>
-                <h1>Polityka Prywatności</h1>
-                <p>Witamy w SkyPhotos! Dbamy o Twoją prywatność i zobowiązujemy się do jej ochrony. Niniejsza polityka prywatności opisuje, jakie informacje zbieramy, w jaki sposób je wykorzystujemy oraz jak je chronimy.</p>
+            <div class="overlay">
+                <h1>Privacy Policy</h1>
+                <p>Welcome to SkyPhotos! We care about your privacy and are committed to protecting it. This privacy policy describes the information we collect, how we use it, and how we protect it. We strive to ensure that your experience on our platform remains safe and transparent.</p>
                 
-                <h2>Jakie dane zbieramy?</h2>
-                <p>Zbieramy informacje, które podajesz bezpośrednio, takie jak dane kontaktowe (imię, nazwisko, adres e-mail) podczas korzystania z naszych usług, np. przy zapisywaniu się do newslettera lub kontaktu z nami przez formularz.</p>
+                <h2>What Data Do We Collect?</h2>
+                <p>We collect information you provide directly, such as contact information (name, surname, email address) when using our services, for example, when signing up for a newsletter or contacting us through a form. We may also gather data automatically, like IP addresses, to improve the functionality of our site.</p>
                 
-                <h2>W jaki sposób wykorzystujemy dane?</h2>
-                <p>Twoje dane wykorzystujemy do poprawy jakości naszych usług oraz dostosowywania oferty do Twoich preferencji. Możemy również korzystać z danych, aby kontaktować się z Tobą w celach marketingowych, jeśli wyrazisz na to zgodę.</p>
+                <h2>How Do We Use the Data?</h2>
+                <p>We use your data to improve the quality of our services and tailor our offerings to your preferences. We may also use the data to contact you for marketing purposes if you have given your consent. Additionally, we analyze aggregated data to better understand user behavior and enhance user satisfaction.</p>
                 
-                <h2>Jakie są Twoje prawa?</h2>
-                <p>Masz prawo do dostępu do swoich danych, ich poprawiania, usuwania lub ograniczenia ich przetwarzania. Jeśli masz jakiekolwiek pytania lub chcesz skorzystać z tych praw, skontaktuj się z nami.</p>
+                <h2>What Are Your Rights?</h2>
+                <p>You have the right to access your data, correct it, delete it, or restrict its processing. We are here to support you in exercising these rights effectively and efficiently. If you have any questions or wish to exercise these rights, please contact us.</p>
                 
-                <h2>Bezpieczeństwo</h2>
-                <p>Dbamy o bezpieczeństwo Twoich danych i stosujemy odpowiednie środki techniczne oraz organizacyjne, aby chronić je przed nieautoryzowanym dostępem.</p> 
+                <h2>Security</h2>
+                <p>We care about the security of your data and apply appropriate technical and organizational measures to protect it from unauthorized access. Regular audits and data encryption are part of our commitment to data protection.</p>
             </div>
         </div>
+        
         <footer>
             <div class="social-icons">
                 <a href="https://www.facebook.com" target="_blank">Facebook</a>
                 <a href="https://www.instagram.com" target="_blank">Instagram</a>
-                <a href="https://www.twitter.com" target="_blank">Github</a>
+                <a href="https://github.com/Krzysztof-lab/WDAI" target="_blank">Github</a>
             </div>
             <p>&copy; 2024 SkyPhotos. All rights reserved.</p>
             <p><a href="privacy.html">Privacy Policy</a> | <a href="terms.html">Terms of Service</a></p>
         </footer>
+        <script>
+            function updateClock() {
+               const now = new Date();
+               const hours = String(now.getHours()).padStart(2, '0');
+               const minutes = String(now.getMinutes()).padStart(2, '0');
+               const seconds = String(now.getSeconds()).padStart(2, '0');
+               document.getElementById('clock').textContent = `${hours}:${minutes}:${seconds}`;
+            }
+            setInterval(updateClock, 1000);
+            updateClock();
+         </script>
     </body>
 </html>
