@@ -1,0 +1,155 @@
+<html>
+<head>
+    <title>Tabular</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+
+        .controls {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .container {
+            width: 80%;
+            max-width: 900px;
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            margin-top: 20px;
+            overflow-y: auto;
+            height: 80vh;
+        }
+
+        .product {
+            background-color: #f9f9f9;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 4px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: flex-start;
+        }
+
+        .product img {
+            width: 150px;
+            height: 150px;
+            object-fit: cover;
+            margin-right: 20px;
+        }
+
+        .product-details {
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+        }
+
+        .product h {
+            margin: 0;
+            color: #333;
+            font-size: 1.2em;
+        }
+
+        .product p {
+            margin: 5px 0;
+            color: #666;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="controls">
+        <input type="text" id="filterInput" placeholder="Wpisz frazę">
+        <select id="sortSelect">
+            <option value="original">Oryginalna kolejność</option>
+            <option value="asc">Rosnąco</option>
+            <option value="desc">Malejąco</option>
+        </select>
+    </div>
+
+    <div class="container" id="productsContainer"></div>
+
+    <script>
+        let products = [];
+
+        async function fetchAndDisplayData() { //Pobieranie danych
+            const container = document.getElementById('productsContainer');
+            container.innerHTML = "";
+            const response = await fetch('https://dummyjson.com/products');
+            const data = await response.json();
+            products = data.products;
+
+            displayProducts(products);
+        }
+
+        function displayProducts(productsToDisplay) { //Wyświetlanie danych
+            const container = document.getElementById('productsContainer');
+            container.innerHTML = ""; 
+            
+            productsToDisplay.forEach(item => {
+                const productDiv = document.createElement('div');
+                productDiv.classList.add('product');
+
+                const productImage = document.createElement('img');
+                productImage.src = item.thumbnail;
+                productImage.alt = item.title;
+
+                const productDetailsDiv = document.createElement('div');
+                productDetailsDiv.classList.add('product-details');
+
+                const productTitle = document.createElement('h');
+                productTitle.textContent = item.title;
+
+                const productDescription = document.createElement('p');
+                productDescription.textContent = item.description;
+
+                productDetailsDiv.appendChild(productTitle);
+                productDetailsDiv.appendChild(productDescription);
+                productDiv.appendChild(productImage);
+                productDiv.appendChild(productDetailsDiv);
+                container.appendChild(productDiv);
+            });
+        }
+
+        function filterProducts() { //Filtrowanie
+            const filterValue = document.getElementById('filterInput').value.toLowerCase();
+            const filteredProducts = products.filter(product => 
+                product.title.toLowerCase().includes(filterValue) || 
+                product.description.toLowerCase().includes(filterValue)
+            );
+            sortAndDisplayProducts(filteredProducts);
+        }
+
+        function sortAndDisplayProducts(filteredProducts) { //Sortowanie
+            const sortValue = document.getElementById('sortSelect').value;
+            let sortedProducts = [...filteredProducts];
+
+            if (sortValue === 'asc') {
+                sortedProducts.sort((a, b) => a.title.localeCompare(b.title));
+            } else if (sortValue === 'desc') {
+                sortedProducts.sort((a, b) => b.title.localeCompare(a.title));
+            }
+            displayProducts(sortedProducts);
+        }
+
+        document.getElementById('filterInput').addEventListener('input', filterProducts);
+        document.getElementById('sortSelect').addEventListener('change', () => {
+            filterProducts();
+        });
+        fetchAndDisplayData();
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stoper</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+        }
+
+        .stoper {
+            font-size: 2em;
+            margin-bottom: 20px;
+        }
+
+        .buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 1em;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="stoper" id="display">0min 0s</div>
+    <div class="buttons">
+        <button onclick="start()">Start</button>
+        <button onclick="stop()">Stop</button>
+        <button onclick="reset()">Reset</button>
+    </div>
+
+    <script>
+        let timer;
+        let seconds = 0;
+        let isRunning = false;
+
+        function format(secs) {
+            const mins = String(Math.floor((secs % 3600) / 60));
+            const sec = String(secs % 60);
+            return `${mins}min ${sec}sec`;
+        }
+
+        function start() {
+            if (!isRunning) {
+                isRunning = true;
+                timer = setInterval(() => {
+                    seconds++;
+                    document.getElementById('display').textContent = format(seconds);
+                }, 1000);
+            }
+        }
+
+        function stop() {
+            clearInterval(timer);
+            isRunning = false;
+        }
+
+        function reset() {
+            clearInterval(timer);
+            seconds = 0;
+            document.getElementById('display').textContent = format(seconds);
+            isRunning = false;
+        }
+    </script>
+</body>
+</html>

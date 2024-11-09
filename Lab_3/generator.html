@@ -1,0 +1,135 @@
+<html lang="pl">
+    <head>
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                height: 100vh;
+                margin: 0;
+                background-color: #f0f0f0;
+            }
+            .content form {
+                display: flex;
+                flex-direction: column;
+                max-width: 600px;
+                margin: 0 auto;
+                background: rgba(255, 255, 255, 0.8);
+                padding: 20px;
+                border-radius: 8px;
+            }
+            .content form label {
+                margin-top: 10px;
+                font-weight: bold;
+                color: #0F1035;
+            }
+            .content form input[type="text"],
+            .content form select,
+            .content form textarea {
+                width: 100%;
+                padding: 10px;
+                margin-top: 5px;
+                border: 1px solid #ddd;
+                border-radius: 4px;
+            }
+            .content form input[type="submit"] {
+                margin-top: 20px;
+                padding: 10px;
+                background-color: #3A6D8C;
+                color: white;
+                border: none;
+                border-radius: 4px;
+                cursor: pointer;
+                font-weight: bold;
+            }
+            .content form input[type="submit"]:hover {
+                background-color: #0F1035;
+            }
+            input[type="checkbox"] {
+                width: 20px;
+                height: 20px;
+                cursor: pointer;
+                margin-right: 10px;
+            }
+            label {
+                font-size: 1.2em;
+                cursor: pointer;
+                display: flex;
+                align-items: center;
+            }
+        </style>
+    </head>
+    <body>
+        <label for="min"></label>
+        <input type="text" id="min" name="min" placeholder="Minimalna długość hasła" required>
+
+        <label for="max"></label>
+        <input type="text" id="max" name="max" placeholder="Maksymalna długość hasła" required>
+        
+        <label>
+            <input type="checkbox" id="capitalLetters">Czy hasło ma zawierać wielkie litery?
+        </label>
+        <label>
+            <input type="checkbox" id="specialSigns">Czy hasło ma zawierać znaki specjalne?
+        </label>
+        <input type="submit" value="Wygeneruj" id="generateButton">
+        
+    </body>
+    <script>
+        document.getElementById('generateButton').onclick = function() {
+            const minLength = parseInt(document.getElementById('min').value);
+            const maxLength = parseInt(document.getElementById('max').value);
+            const includeCapitalLetters = document.getElementById('capitalLetters').checked;
+            const includeSpecialSigns = document.getElementById('specialSigns').checked;
+            
+            const lista = [];
+            
+            // Małe litery
+            for (let i = 97; i <= 122; i++) {
+                lista.push(String.fromCharCode(i));
+            }
+            
+            // Cyfry
+            for (let i = 48; i <= 57; i++) {
+                lista.push(String.fromCharCode(i));
+            }
+            
+            // Wielkie litery (jeśli zaznaczone)
+            if (includeCapitalLetters) {
+                for (let i = 65; i <= 90; i++) {
+                    lista.push(String.fromCharCode(i));
+                }
+            }
+            
+            // Znaki specjalne (jeśli zaznaczone)
+            if (includeSpecialSigns) {
+                for (let i = 33; i <= 47; i++) {
+                    lista.push(String.fromCharCode(i));
+                }
+                for (let i = 58; i <= 64; i++) {
+                    lista.push(String.fromCharCode(i));
+                }
+                for (let i = 91; i <= 96; i++) {
+                    lista.push(String.fromCharCode(i));
+                }
+                for (let i = 123; i <= 126; i++) {
+                    lista.push(String.fromCharCode(i));
+                }
+            }
+            
+            // Losowanie długości hasła
+            const passwordLength = Math.floor(Math.random() * (maxLength - minLength + 1)) + minLength;
+            let password = '';
+            
+            // Generowanie hasła
+            for (let i = 0; i < passwordLength; i++) {
+                const randomIndex = Math.floor(Math.random() * lista.length);
+                password += lista[randomIndex];
+            }
+            
+            alert(password);
+        };
+    </script>
+</html>
