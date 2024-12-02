@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Apocalipse</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-image: url('board-bg.jpg');
+            min-height: 100vh;
+            cursor: none;
+        }
+
+        canvas {
+            position: absolute;
+        }
+
+        #heartsCounter {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            display: flex;
+            gap: 10px;
+        }
+
+        #heartsCounter img {
+            width: 80px;
+            height: 80px;
+        }
+
+        #gameOverScreen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(128, 0, 128, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            color: #FFF;
+            font-size: 32px;
+            z-index: 1;
+        }
+
+        #tryAgainButton {
+            margin-top: 20px;
+            padding: 10px 20px;
+            font-size: 20px;
+            background-color: #FFF;
+            color: #800080;
+            border: none;
+            border-radius: 5px;
+            text-decoration: none;
+        }
+
+        #tryAgainButton:hover {
+            background-color: #e0e0e0;
+        }
+
+        #cursor {
+            position: absolute;
+            width: 500px;
+            height: 500px;
+            background-image: url('aim.png');
+            background-size: contain;
+            pointer-events: none;
+            z-index: 2;
+        }
+
+        #scoreCounter {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 32px;
+            color: white;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div id="cursor"></div>
+    <div id="scoreCounter">Wynik: 0</div>
+    <div id="heartsCounter">
+        <img id="heart1" src="full_heart.png" alt="Heart">
+        <img id="heart2" src="full_heart.png" alt="Heart">
+        <img id="heart3" src="full_heart.png" alt="Heart">
+    </div>
+    <canvas id="gameCanvas"></canvas>
+    <div id="gameOverScreen" style="display:none;">
+        <div>Przegrałeś</div>
+        <a id="tryAgainButton" href="game.html">Spróbuj jeszcze raz</a>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+
+        const gameOverScreen = document.getElementById('gameOverScreen');
+        let lives = 3; // Licznik żyć
+        let score = 0; // Licznik punktów
+
+        const zombieImage = new Image();
+        zombieImage.src = 'walkingdead.png';
+
+        const frameCount = 10;
+        const frameWidth = 200;
+        const frameHeight = 330;
+
+        const zombies = [];
+
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        function updateHearts() {
+            for (let i = 1; i <= 3; i++) {
+                const heart = document.getElementById('heart' + i);
+                if (i > lives) {
+                    heart.src = 'empty_heart.png';
+                } else {
+                    heart.src = 'full_heart.png';
+                }
+            }
+        }
+
+        function updateScore() {
+            const scoreCounter = document.getElementById('scoreCounter');
+            scoreCounter.textContent = `Wynik: ${score}`;
+        }
+
+        function decreaseLife() {
+            lives--;
+            updateHearts();
+            if (lives <= 0) {
+                gameOverScreen.style.display = 'flex';
+                var audio = new Audio('sad-music.mp3');
+                audio.play();//muzyka---------------------------------------------------------------------
+            }
+        }
+
+        function checkZombieOutOfBounds(zombie, index) {
+            if (zombie.x + zombie.width <= 0) {
+                zombies.splice(index, 1);
+                decreaseLife();
+            }
+        }
+
+        function spawnZombie() {
+            const scale = Math.random() * 0.8 + 0.2;
+
+            zombies.push({
+                x: canvas.width,
+                y: Math.random() * (canvas.height - frameHeight * scale),
+                width: frameWidth * scale,
+                height: frameHeight * scale,
+                currentFrame: 0,
+                scale: scale,
+                frameDelay: Math.floor(Math.random() * 50) + 30,
+                lastFrameTime: 0,
+                speed: Math.random() * 10 + 1
+            });
+        }
+
+        function animate(timestamp) {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            zombies.forEach((zombie, index) => {
+                if (timestamp - zombie.lastFrameTime >= zombie.frameDelay) {
+                    zombie.currentFrame = (zombie.currentFrame + 1) % frameCount;
+                    zombie.lastFrameTime = timestamp;
+                }
+
+                ctx.drawImage(
+                    zombieImage,
+                    zombie.currentFrame * frameWidth, 0, frameWidth, frameHeight,
+                    zombie.x, zombie.y, zombie.width, zombie.height
+                );
+
+                zombie.x -= zombie.speed;
+                checkZombieOutOfBounds(zombie, index);
+            });
+
+            if (lives > 0) {
+                requestAnimationFrame(animate);
+            }
+        }
+
+        canvas.addEventListener('click', function(event) {
+            const rect = canvas.getBoundingClientRect();
+            const clickX = event.clientX - rect.left;
+            const clickY = event.clientY - rect.top;
+
+            let hitZombie = false;
+
+            zombies.forEach((zombie, index) => {
+                if (
+                    clickX >= zombie.x &&
+                    clickX <= zombie.x + zombie.width &&
+                    clickY >= zombie.y &&
+                    clickY <= zombie.y + zombie.height
+                ) {
+                    zombies.splice(index, 1);
+                    score += 20; //Nagroda za trafienie
+                    hitZombie = true;
+                }
+            });
+
+            if (!hitZombie) {
+                score=Math.max(score -= 5,0); // Kara za nietrafienie
+            }
+
+            updateScore();
+        });
+
+        zombieImage.onload = function () {
+            let spawnInterval = 2000; // Początkowy interwał
+            const minInterval = 500; // Minimalny czas pomiędzy spawnami
+            const intervalDecrement = 100; // O ile zmniejszamy interwał
+
+            function spawnLoop() {
+                spawnZombie();
+                if (spawnInterval > minInterval) {
+                    spawnInterval -= intervalDecrement;
+                }
+                setTimeout(spawnLoop, spawnInterval);
+            }
+
+            spawnLoop();
+            requestAnimationFrame(animate);
+        };
+
+        document.addEventListener('mousemove', function(event) {
+            var cursor = document.getElementById("cursor");
+            cursor.style.left = (event.pageX - cursor.offsetWidth / 2) + 'px';
+            cursor.style.top = (event.pageY - cursor.offsetHeight / 2) + 'px';
+        });
+    </script>
+</body>
+</html>
