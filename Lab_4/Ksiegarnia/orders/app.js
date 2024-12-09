@@ -5,18 +5,8 @@ const axios = require('axios');
 
 const app = express();
 const port = 3001;
-
-// Middleware do obsługi JSON
 app.use(bodyParser.json());
-
-// Połączenie z bazą danych SQLite
-const db = new sqlite3.Database('./orders.db', (err) => {
-    if (err) {
-        console.error('Błąd połączenia z bazą danych:', err.message);
-    } else {
-        console.log('Połączono z bazą danych SQLite (zamówienia).');
-    }
-});
+const db = new sqlite3.Database('./orders.db');
 
 // Tabela orders
 db.run(`
@@ -47,7 +37,7 @@ app.post('/api/orders', async (req, res) => {
     const { user_id, book_id, quantity } = req.body;
 
     if (!user_id || !book_id || !quantity) {
-        return res.status(400).json({ error: 'Missing user_id, book_id, or quantity' });
+        return res.status(400).json({ error: 'Brakujący user_ID, book_ID lub ilość' });
     }
 
     try {
@@ -56,7 +46,7 @@ app.post('/api/orders', async (req, res) => {
         const bookResponse = await axios.get(bookServiceUrl);
 
         if (!bookResponse.data) {
-            return res.status(404).json({ error: 'Book not found' });
+            return res.status(404).json({ error: 'Książka nieznaleziona' });
         }
 
         // Dodanie zamówienia do bazy danych
@@ -72,7 +62,7 @@ app.post('/api/orders', async (req, res) => {
             }
         );
     } catch (error) {
-        res.status(500).json({ error: 'Error communicating with book service' });
+        res.status(500).json({ error: 'Błąd z połączeniem z bazą książek' });
     }
 });
 
@@ -84,9 +74,9 @@ app.delete('/api/orders/:orderId', (req, res) => {
         if (err) {
             res.status(500).json({ error: err.message });
         } else if (this.changes === 0) {
-            res.status(404).json({ error: 'Order not found' });
+            res.status(404).json({ error: 'Zamówienie nieznalezione' });
         } else {
-            res.status(200).json({ message: 'Order deleted' });
+            res.status(200).json({ message: 'Zamówienie usunięte' });
         }
     });
 });
@@ -97,7 +87,7 @@ app.patch('/api/orders/:orderId', (req, res) => {
     const { quantity, status } = req.body;
 
     if (!quantity && !status) {
-        return res.status(400).json({ error: 'Missing quantity or status to update' });
+        return res.status(400).json({ error: 'Brakująca ilość lub status do zmiany' });
     }
 
     const updates = [];
@@ -121,9 +111,9 @@ app.patch('/api/orders/:orderId', (req, res) => {
             if (err) {
                 res.status(500).json({ error: err.message });
             } else if (this.changes === 0) {
-                res.status(404).json({ error: 'Order not found' });
+                res.status(404).json({ error: 'Zamówienie nieznalezione' });
             } else {
-                res.status(200).json({ message: 'Order updated' });
+                res.status(200).json({ message: 'Zamówienie zmienione' });
             }
         }
     );

@@ -5,11 +5,7 @@ const bcrypt = require('bcrypt');
 
 const app = express();
 const port = 3002;
-
-// Middleware
 app.use(bodyParser.json());
-
-// Baza danych
 const db = new sqlite3.Database('./users.db');
 
 // Tabela użytkowników

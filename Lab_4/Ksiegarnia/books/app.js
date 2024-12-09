@@ -4,18 +4,8 @@ const bodyParser = require('body-parser');
 
 const app = express();
 const port = 3000;
-
-// Middleware do obsługi JSON
 app.use(bodyParser.json());
-
-// Połączenie z bazą danych SQLite
-const db = new sqlite3.Database('./books.db', (err) => {
-    if (err) {
-        console.error('Błąd połączenia z bazą danych:', err.message);
-    } else {
-        console.log('Połączono z bazą danych SQLite.');
-    }
-});
+const db = new sqlite3.Database('./books.db');
 
 // Tabela books
 db.run(`
@@ -46,7 +36,7 @@ app.get('/api/books/:id', (req, res) => {
         if (err) {
             res.status(500).json({ error: err.message });
         } else if (!row) {
-            res.status(404).json({ error: 'Book not found' });
+            res.status(404).json({ error: 'Nie znaleziono książki' });
         } else {
             res.json(row);
         }
@@ -57,7 +47,7 @@ app.get('/api/books/:id', (req, res) => {
 app.post('/api/books', (req, res) => {
     const { title, author, year } = req.body;
     if (!title || !author || !year) {
-        return res.status(400).json({ error: 'Missing title, author, or year' });
+        return res.status(400).json({ error: 'Brakujący autor, tytuł lub rok' });
     }
     db.run(
         'INSERT INTO books (title, author, year) VALUES (?, ?, ?)',
@@ -79,9 +69,9 @@ app.delete('/api/books/:id', (req, res) => {
         if (err) {
             res.status(500).json({ error: err.message });
         } else if (this.changes === 0) {
-            res.status(404).json({ error: 'Book not found' });
+            res.status(404).json({ error: 'Książka nieznaleziona' });
         } else {
-            res.status(200).json({ message: 'Book deleted' });
+            res.status(200).json({ message: 'Książka usunięta' });
         }
     });
 });
